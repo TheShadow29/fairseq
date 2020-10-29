@@ -5,7 +5,7 @@
 
 import logging
 import math
-from collections import Collection
+from collections.abc import Collection
 from dataclasses import dataclass, field
 from typing import List
 
@@ -115,7 +115,7 @@ class Adam(torch.optim.Optimizer):
         amsgrad (boolean, optional): whether to use the AMSGrad variant of this
             algorithm from the paper `On the Convergence of Adam and Beyond`_
 
-    .. _Adam\: A Method for Stochastic Optimization:
+    .. _Adam: A Method for Stochastic Optimization:
         https://arxiv.org/abs/1412.6980
     .. _On the Convergence of Adam and Beyond:
         https://openreview.net/forum?id=ryQu7f-RZ

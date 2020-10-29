@@ -3,7 +3,7 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-from collections import Collection
+from collections.abc import Collection
 from dataclasses import dataclass, field
 from typing import List
 
@@ -56,20 +56,12 @@ class InverseSquareRootSchedule(FairseqLRScheduler):
                 "Cannot use a fixed learning rate schedule with inverse_sqrt."
                 " Consider --lr-scheduler=fixed instead."
             )
-        warmup_end_lr = (
-            cfg.lr[0]
-            if isinstance(cfg.lr, Collection)
-            else cfg.lr
-        )
+        warmup_end_lr = cfg.lr[0] if isinstance(cfg.lr, Collection) else cfg.lr
         if cfg.warmup_init_lr < 0:
-            cfg.warmup_init_lr = (
-                0 if cfg.warmup_updates > 0 else warmup_end_lr
-            )
+            cfg.warmup_init_lr = 0 if cfg.warmup_updates > 0 else warmup_end_lr
 
         # linearly warmup for the first args.warmup_updates
-        self.lr_step = (
-            warmup_end_lr - cfg.warmup_init_lr
-        ) / cfg.warmup_updates
+        self.lr_step = (warmup_end_lr - cfg.warmup_init_lr) / cfg.warmup_updates
 
         # then, decay prop. to the inverse square root of the update number
         self.decay_factor = warmup_end_lr * cfg.warmup_updates ** 0.5

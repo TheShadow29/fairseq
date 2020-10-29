@@ -4,7 +4,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import math
-from collections import Collection
+from collections.abc import Collection
 from dataclasses import dataclass, field
 from typing import List
 
@@ -67,9 +67,7 @@ class CosineSchedule(FairseqLRScheduler):
     after every iteration.
     """
 
-    def __init__(
-        self, cfg: DictConfig, fairseq_optimizer
-    ):
+    def __init__(self, cfg: DictConfig, fairseq_optimizer):
         super().__init__(cfg, fairseq_optimizer)
         if isinstance(cfg.lr, Collection) and len(cfg.lr) > 1:
             raise ValueError(
@@ -78,11 +76,7 @@ class CosineSchedule(FairseqLRScheduler):
             )
 
         warmup_end_lr = cfg.max_lr
-        lr = (
-            cfg.lr[0]
-            if isinstance(cfg.lr, Collection)
-            else cfg.lr
-        )
+        lr = cfg.lr[0] if isinstance(cfg.lr, Collection) else cfg.lr
         if cfg.warmup_init_lr < 0:
             cfg.warmup_init_lr = lr
 
@@ -101,9 +95,7 @@ class CosineSchedule(FairseqLRScheduler):
 
         if cfg.warmup_updates > 0:
             # linearly warmup for the first args.warmup_updates
-            self.lr_step = (
-                warmup_end_lr - cfg.warmup_init_lr
-            ) / cfg.warmup_updates
+            self.lr_step = (warmup_end_lr - cfg.warmup_init_lr) / cfg.warmup_updates
         else:
             self.lr_step = 1
 
