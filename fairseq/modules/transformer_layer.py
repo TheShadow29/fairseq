@@ -32,15 +32,15 @@ class TransformerEncoderLayer(nn.Module):
     def __init__(self, args):
         super().__init__()
         self.embed_dim = args.encoder_embed_dim
-        self.quant_noise = getattr(args, 'quant_noise_pq', 0)
-        self.quant_noise_block_size = getattr(args, 'quant_noise_pq_block_size', 8) or 8
+        self.quant_noise = getattr(args, "quant_noise_pq", 0)
+        self.quant_noise_block_size = getattr(args, "quant_noise_pq_block_size", 8) or 8
         self.self_attn = self.build_self_attention(self.embed_dim, args)
         self.self_attn_layer_norm = LayerNorm(self.embed_dim)
         self.dropout_module = FairseqDropout(
             args.dropout, module_name=self.__class__.__name__
         )
         self.activation_fn = utils.get_activation_fn(
-            activation=getattr(args, 'activation_fn', 'relu') or "relu"
+            activation=getattr(args, "activation_fn", "relu") or "relu"
         )
         activation_dropout_p = getattr(args, "activation_dropout", 0) or 0
         if activation_dropout_p == 0:
@@ -185,10 +185,7 @@ class TransformerDecoderLayer(nn.Module):
         self.cross_self_attention = getattr(args, "cross_self_attention", False)
 
         self.self_attn = self.build_self_attention(
-            self.embed_dim,
-            args,
-            add_bias_kv=add_bias_kv,
-            add_zero_attn=add_zero_attn,
+            self.embed_dim, args, add_bias_kv=add_bias_kv, add_zero_attn=add_zero_attn,
         )
 
         self.activation_fn = utils.get_activation_fn(
@@ -317,6 +314,7 @@ class TransformerDecoderLayer(nn.Module):
             assert incremental_state is not None
             self.self_attn._set_input_buffer(incremental_state, saved_state)
         _self_attn_input_buffer = self.self_attn._get_input_buffer(incremental_state)
+
         if self.cross_self_attention and not (
             incremental_state is not None
             and _self_attn_input_buffer is not None
